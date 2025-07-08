@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Number Input</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+      .number-input {
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+      }
+      .error {
+        color: red;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Custom Number Input</h2>
+    <input type="text" class="number-input" placeholder="Enter numbers only" />
+    <div class="error" id="error"></div>
+
+    <script>
+      const numberInput = document.querySelector(".number-input");
+      const errorDisplay = document.getElementById("error");
+
+      numberInput.addEventListener("keydown", function (event) {
+        // Allow: backspace, delete, tab, escape, enter
+        if (
+          [46, 8, 9, 27, 13].includes(event.keyCode) ||
+          // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+          (event.ctrlKey && [65, 67, 86, 88].includes(event.keyCode))
+        ) {
+          return;
+        }
+
+        // Ensure it's a number and stop the keypress if not
+        if (
+          (event.shiftKey || event.keyCode < 48 || event.keyCode > 57) &&
+          (event.keyCode < 96 || event.keyCode > 105)
+        ) {
+          event.preventDefault();
+          errorDisplay.textContent = "Numbers only please!";
+          setTimeout(() => (errorDisplay.textContent = ""), 2000);
+        }
+      });
+
+      // Additional validation on paste
+      numberInput.addEventListener("paste", function (event) {
+        const pasteData = event.clipboardData.getData("text/plain");
+        if (!/^\d+$/.test(pasteData)) {
+          event.preventDefault();
+          errorDisplay.textContent = "Pasted content must be numbers only!";
+          setTimeout(() => (errorDisplay.textContent = ""), 2000);
+        }
+      });
+    </script>
+  </body>
+</html>

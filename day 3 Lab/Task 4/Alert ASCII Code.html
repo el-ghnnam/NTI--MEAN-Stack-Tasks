@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Key Code Detector</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+      #output {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        min-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Press any key to see its ASCII code and modifier keys</h2>
+    <div id="output"></div>
+
+    <script>
+      document.addEventListener("keydown", function (event) {
+        const output = document.getElementById("output");
+        let message = `Key Pressed: ${event.key}<br>`;
+        message += `ASCII Code: ${event.keyCode}<br>`;
+        message += `Alt Key: ${event.altKey ? "Yes" : "No"}<br>`;
+        message += `Ctrl Key: ${event.ctrlKey ? "Yes" : "No"}<br>`;
+        message += `Shift Key: ${event.shiftKey ? "Yes" : "No"}`;
+
+        output.innerHTML = message;
+
+        // Prevent default for some special keys
+        if ([16, 17, 18].includes(event.keyCode)) {
+          event.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>
