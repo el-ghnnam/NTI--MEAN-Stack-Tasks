@@ -6,7 +6,8 @@ function fetchWithPromise() {
   const container = document.getElementById("promiseUsers");
   container.innerHTML = "<p>Loading...</p>";
 
-  fetch(API_URL)
+  // fetch specified number of posts not all posts
+  fetch(`${API_URL}?_limit=${count}`)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -14,7 +15,7 @@ function fetchWithPromise() {
       return response.json();
     })
     .then((users) => {
-      displayUsers(users.slice(0, count), container);
+      displayUsers(users, container);
     })
     .catch((error) => {
       container.innerHTML = `<p class="error">Error: ${error.message}</p>`;
@@ -29,12 +30,12 @@ async function fetchWithAsync() {
   container.innerHTML = "<p>Loading...</p>";
 
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(`${API_URL}?_limit=${count}`);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const users = await response.json();
-    displayUsers(users.slice(0, count), container);
+    displayUsers(users, container);
   } catch (error) {
     container.innerHTML = `<p class="error">Error: ${error.message}</p>`;
     console.error("Error with async/await fetch:", error);
@@ -49,13 +50,14 @@ function displayUsers(users, container) {
     const card = document.createElement("div");
     card.className = "user-card";
     card.innerHTML = `
-            <h3>${user.name}</h3>
-            <p><strong>Username:</strong> ${user.username}</p>
-            <p><strong>Email:</strong> ${user.email}</p>
-            <p><strong>Phone:</strong> ${user.phone}</p>
-            <p><strong>Company:</strong> ${user.company.name}</p>
-            <p><strong>Address:</strong> ${user.address.street}, ${user.address.city}</p>
-        `;
+      <h3>${user.name}</h3>
+      <p><strong>ID:</strong> ${user.id}</p>
+      <p><strong>Username:</strong> ${user.username}</p>
+      <p><strong>Email:</strong> ${user.email}</p>
+      <p><strong>Phone:</strong> ${user.phone}</p>
+      <p><strong>Company:</strong> ${user.company.name}</p>
+      <p><strong>Address:</strong> ${user.address.street}, ${user.address.city}</p>
+    `;
     container.appendChild(card);
   });
 }
