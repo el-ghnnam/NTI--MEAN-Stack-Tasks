@@ -1,0 +1,193 @@
+<main class="main-content">
+  <div class="content-container">
+    <header class="content-header">
+      <h1>Recent Posts</h1>
+      <p class="subtitle">Explore the latest updates from our community</p>
+    </header>
+
+    <app-datauser></app-datauser>
+  </div>
+</main>
+
+<div *ngIf="!showform">
+  <div class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" *ngFor="let post of posts">
+        <div class="card shadow-sm h-100">
+          <app-child [username]="getUsernameById(post.userid)"></app-child>
+
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">{{ post.title }}</h5>
+          </div>
+
+          <img
+            [src]="post.imgurl"
+            class="card-img-top"
+            alt="Post image"
+            style="max-height: 200px; object-fit: cover"
+          />
+
+          <div class="card-body">
+            <p class="card-text">{{ post.body }}</p>
+          </div>
+
+          <div
+            class="card-footer d-flex justify-content-between align-items-center"
+          >
+            <button
+              class="btn"
+              [ngClass]="{
+                'btn-danger': post.like,
+                'btn-outline-danger': !post.like
+              }"
+              (click)="likeCounter(post)"
+            >
+              <i class="fas fa-heart"></i> {{ post.likes }}
+            </button>
+
+            <button
+              class="btn btn-outline-secondary"
+              (click)="toggleCommentSection(post)"
+            >
+              <i class="fas fa-comment"></i> {{ post.comments.length }}
+            </button>
+
+            <button
+              class="btn btn-outline-danger"
+              (click)="removePost(post.id)"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+
+          <!-- Comments -->
+          <div class="px-3 pb-3" *ngIf="post.showComments">
+            <div class="input-group mb-2">
+              <input
+                type="text"
+                [(ngModel)]="post.newComment"
+                placeholder="Share your thoughts"
+                class="form-control"
+              />
+              <button class="btn btn-success" (click)="addComment(post)">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+
+            <div *ngIf="post.comments.length">
+              <h6><i class="fas fa-comments text-primary"></i> Comments</h6>
+              <ul class="list-group">
+                <li
+                  class="list-group-item d-flex align-items-center"
+                  *ngFor="let comment of post.comments"
+                >
+                  <i class="fas fa-user-circle me-2 text-secondary"></i>
+                  {{ comment }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Form to Add New Post -->
+<div class="container mt-4" *ngIf="showform">
+  <form (ngSubmit)="addPost()" #postForm="ngForm" class="card p-4 shadow-sm">
+    <div class="mb-3">
+      <label class="form-label">Title</label>
+      <input
+        type="text"
+        name="title"
+        required
+        minlength="3"
+        maxlength="100"
+        class="form-control"
+        [(ngModel)]="newpost.title"
+        #titleCtrl="ngModel"
+      />
+      <div
+        *ngIf="
+          titleCtrl.invalid &&
+          (titleCtrl.dirty || titleCtrl.touched || postForm.submitted)
+        "
+        class="text-danger"
+      >
+        <div *ngIf="titleCtrl.errors?.['required']">Title is required</div>
+        <div *ngIf="titleCtrl.errors?.['minlength']">
+          Title must be at least 3 characters long
+        </div>
+        <div *ngIf="titleCtrl.errors?.['maxlength']">
+          Title cannot exceed 100 characters
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Body</label>
+      <textarea
+        name="body"
+        required
+        minlength="10"
+        maxlength="500"
+        class="form-control"
+        [(ngModel)]="newpost.body"
+        #bodyCtrl="ngModel"
+      ></textarea>
+      <div
+        *ngIf="
+          bodyCtrl.invalid &&
+          (bodyCtrl.dirty || bodyCtrl.touched || postForm.submitted)
+        "
+        class="text-danger"
+      >
+        <div *ngIf="bodyCtrl.errors?.['required']">Body is required</div>
+        <div *ngIf="bodyCtrl.errors?.['minlength']">
+          Body must be at least 10 characters long
+        </div>
+        <div *ngIf="bodyCtrl.errors?.['maxlength']">
+          Body cannot exceed 500 characters
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">User ID</label>
+      <input
+        type="number"
+        name="userid"
+        required
+        class="form-control"
+        [(ngModel)]="newpost.userid"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Image URL</label>
+      <input
+        type="text"
+        name="imgurl"
+        required
+        class="form-control"
+        [(ngModel)]="newpost.imgurl"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="postForm.invalid">
+      <i class="fas fa-plus-circle"></i> Add Post
+    </button>
+  </form>
+</div>
+
+<!-- Toggle Form Button -->
+<div class="text-center mt-4">
+  <button class="btn btn-dark" (click)="toggleForm()">
+    <i
+      class="fas"
+      [ngClass]="{ 'fa-plus': !showform, 'fa-times': showform }"
+    ></i>
+    {{ showform ? "Hide Form" : "Add New Post" }}
+  </button>
+</div>

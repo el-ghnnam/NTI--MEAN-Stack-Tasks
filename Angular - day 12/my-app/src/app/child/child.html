@@ -1,0 +1,7 @@
+<p *ngIf="userData">Post by: {{ userData.name }}</p>
+
+<app-datauser
+  *ngIf="userData"
+  [userid]="userData.id"
+  [date_create]="userData.imgurl"
+></app-datauser>

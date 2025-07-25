@@ -1,0 +1,50 @@
+<style>
+  .main-content {
+    width: 100%;
+    min-height: calc(100vh - 120px);
+    padding: 2rem 0;
+    background-color: #f8f9fa;
+  }
+
+  .content-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .content-header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .content-header .subtitle {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .content-header h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<app-navbar></app-navbar>
+<router-outlet></router-outlet>
